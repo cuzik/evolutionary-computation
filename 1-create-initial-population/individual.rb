@@ -5,7 +5,6 @@
 # type:         ENUM: { :int, :int_per, :bin, :uni }
 
 require 'matrix'
-require 'faker'
 
 class Individual
   attr_reader :id, :informations
@@ -27,7 +26,7 @@ class Individual
     @informations = informations_init
   end
 
-  def set_informations(informations)
+  def informations_(informations)
     @informations = informations
   end
 
@@ -55,13 +54,13 @@ class Individual
   def informations_init
     case @type_data
     when :int
-      Array.new(@info_numbers) { Faker::Number.between(@lim_inf, @lim_sup) }
+      Array.new(@info_numbers) { rand(@lim_inf..@lim_sup) }
     when :int_perm
-      Array.new(@info_numbers) { |col| col + 1}.shuffle
+      Array.new(@info_numbers) { |col| col + 1 }.shuffle
     when :bin
-      Array.new(@info_numbers) { Faker::Number.between(0, 1) }
+      Array.new(@info_numbers) { rand(0..1) }
     when :uni
-      Array.new(@info_numbers) { Faker::Number.between(@lim_inf.to_f, @lim_sup.to_f) }
+      Array.new(@info_numbers) { rand(@lim_inf.to_f..@lim_sup.to_f) }
     end
   end
 

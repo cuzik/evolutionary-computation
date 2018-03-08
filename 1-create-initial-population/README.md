@@ -13,5 +13,5 @@ You can edit this file too if you want
 ## Test [WIP]
 
 ```rb
-$ ...
+$ ruby tests.rb
 ```

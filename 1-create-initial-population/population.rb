@@ -1,7 +1,7 @@
 # Atributes
 # id:                     int
 # number_of_individuals:  int
-# individuals:            int
+# individuals:            Individual
 
 load 'individual.rb'
 
