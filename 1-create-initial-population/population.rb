@@ -5,6 +5,7 @@
 
 load 'individual.rb'
 
+# Population
 class Population
   attr_reader :id, :number_of_individuals, :individuals
 
@@ -14,10 +15,8 @@ class Population
     @@last_id += 1
     @id                    = @@last_id
     @number_of_individuals = number_of_individuals
-    @individuals           = []
-
-    @number_of_individuals.times do
-      @individuals += [Individual.new(type_data, info_numbers, lim_inf, lim_sup)]
-    end
+    @individuals = Array.new(@number_of_individuals) {
+      Individual.new(type_data, info_numbers, lim_inf, lim_sup)
+    }
   end
 end

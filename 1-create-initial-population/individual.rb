@@ -6,12 +6,13 @@
 
 require 'matrix'
 
+# Individual
 class Individual
   attr_reader :id, :informations
 
   @@last_id = 0
 
-  TYPES_OPTIONS = %i[int int_perm bin uni]
+  TYPES_OPTIONS = %i[int int_perm bin uni].freeze
 
   def initialize(type_data, info_numbers, lim_inf = nil, lim_sup = nil)
     @@last_id += 1
