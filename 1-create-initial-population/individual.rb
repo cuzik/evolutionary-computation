@@ -14,7 +14,7 @@ class Individual
 
   TYPES_OPTIONS = %i[int int_perm bin uni]
 
-  def initialize(type_data, info_numbers, lim_inf = 0, lim_sup = 1, informations = nil)
+  def initialize(type_data, info_numbers, lim_inf = nil, lim_sup = nil)
     @@last_id += 1
     @id            = @@last_id
     @info_numbers  = info_numbers
@@ -24,7 +24,11 @@ class Individual
 
     validate_params
 
-    @informations = informations.nil? ? informations_init : informations
+    @informations = informations_init
+  end
+
+  def set_informations(informations)
+    @informations = informations
   end
 
   private
@@ -49,36 +53,16 @@ class Individual
   end
 
   def informations_init
-    Matrix.build(1, @info_numbers) { gen_info }
-  end
-
-  def gen_info
     case @type_data
     when :int
-      gem_info_int
+      Array.new(@info_numbers) { Faker::Number.between(@lim_inf, @lim_sup) }
     when :int_perm
-      gem_info_int_prm
+      Array.new(@info_numbers) { |col| col + 1}.shuffle
     when :bin
-      gem_info_bin
+      Array.new(@info_numbers) { Faker::Number.between(0, 1) }
     when :uni
-      gem_info_uni
+      Array.new(@info_numbers) { Faker::Number.between(@lim_inf.to_f, @lim_sup.to_f) }
     end
-  end
-
-  def gem_info_int
-    Faker::Number.between(@lim_inf, @lim_sup)
-  end
-
-  def gem_info_int_prm
-    Faker::Number.between(1, @info_numbers)
-  end
-
-  def gem_info_bin
-    Faker::Number.between(@lim_inf, @lim_sup)
-  end
-
-  def gem_info_uni
-    Faker::Number.between(@lim_inf.to_f, @lim_sup)
   end
 
   def pop_error(error)
