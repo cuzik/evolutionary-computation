@@ -9,7 +9,7 @@ Population.new(10, :int, 6, 0, 100).individuals.each do |individual|
 end
 
 puts '-'
-puts 'Pop: 10, Type: :int, Gen: 6'
+puts 'Pop: 10, Type: :int_perm, Gen: 6'
 puts '-'
 
 Population.new(10, :int_perm, 6).individuals.each do |individual|
