@@ -1,21 +1,26 @@
 # Atributes
-# id:          int
-# col_numbers: int
-# row_numbers: int
-# type:        ENUM: { :int, :int_per, :bin, :uni }
+# id:           int
+# col_numbers:  int
+# info_numbers: int
+# type:         ENUM: { :int, :int_per, :bin, :uni }
 
 require 'matrix'
+require 'faker'
 
 class Individual
-  attr_reader :id, :col_numbers, :row_numbers, :type_data, :informations
+  attr_reader :id, :informations
 
-  TYPES_OPTIONS = [:int, :int_perm, :bin, :uni]
+  @@last_id = 0
 
-  def initialize(id, col_numbers, row_numbers, type_data, informations = nil)
-    @id           = id
-    @col_numbers  = col_numbers
-    @row_numbers  = row_numbers
-    @type_data    = type_data
+  TYPES_OPTIONS = %i[int int_perm bin uni]
+
+  def initialize(type_data, info_numbers, lim_inf = 0, lim_sup = 1, informations = nil)
+    @@last_id += 1
+    @id            = @@last_id
+    @info_numbers  = info_numbers
+    @type_data     = type_data
+    @lim_inf       = lim_inf
+    @lim_sup       = lim_sup
 
     validate_params
 
@@ -26,31 +31,29 @@ class Individual
 
   def validate_params
     validate_id
-    validate_col_numbers
-    validate_row_numbers
+    validate_info_numbers
     validate_type_data
   end
 
   def validate_id
     pop_error(:id_not_Integer) unless id.is_a?(Integer)
   end
-  def validate_col_numbers
-    pop_error(:col_numbers_not_Integer) unless col_numbers.is_a?(Integer)
+
+  def validate_info_numbers
+    pop_error(:info_numbers_not_Integer) unless @info_numbers.is_a?(Integer)
   end
-  def validate_row_numbers
-    pop_error(:row_numbers_not_Integer) unless row_numbers.is_a?(Integer)
-  end
+
   def validate_type_data
-    pop_error(:type_data_not_Symbol) unless type_data.is_a?(Symbol)
-    pop_error(:type_data_not_valid) unless TYPES_OPTIONS.include?(type_data)
+    pop_error(:type_data_not_Symbol) unless @type_data.is_a?(Symbol)
+    pop_error(:type_data_not_valid) unless TYPES_OPTIONS.include?(@type_data)
   end
 
   def informations_init
-    matrix = Matrix.build(row_numbers, col_numbers) { |row, col| gen_info }
+    Matrix.build(1, @info_numbers) { gen_info }
   end
 
   def gen_info
-    case type_data
+    case @type_data
     when :int
       gem_info_int
     when :int_perm
@@ -60,23 +63,22 @@ class Individual
     when :uni
       gem_info_uni
     end
-
   end
 
   def gem_info_int
-    0
+    Faker::Number.between(@lim_inf, @lim_sup)
   end
 
   def gem_info_int_prm
-    1
+    Faker::Number.between(1, @info_numbers)
   end
 
   def gem_info_bin
-    2
+    Faker::Number.between(@lim_inf, @lim_sup)
   end
 
   def gem_info_uni
-    3
+    Faker::Number.between(@lim_inf.to_f, @lim_sup)
   end
 
   def pop_error(error)
