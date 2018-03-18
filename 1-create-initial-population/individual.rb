@@ -16,11 +16,11 @@ class Individual
 
   def initialize(type_data, info_numbers, lim_inf = nil, lim_sup = nil)
     @@last_id += 1
-    @id            = @@last_id
-    @info_numbers  = info_numbers
-    @type_data     = type_data
-    @lim_inf       = lim_inf
-    @lim_sup       = lim_sup
+    @id           = @@last_id
+    @info_numbers = info_numbers
+    @lim_inf      = lim_inf
+    @lim_sup      = lim_sup
+    @type_data    = type_data
 
     validate_params
 
