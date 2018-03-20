@@ -1,4 +1,4 @@
-# evolutionary-computation
+# evolutionary-computation [WIP]
 On this ropository you find my projects for evolutionary computation class
 
 
