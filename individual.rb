@@ -8,7 +8,7 @@ require 'matrix'
 
 # Individual
 class Individual
-  attr_reader :id, :informations
+  attr_reader :id, :informations, :centroid_value
 
   @@last_id = 0
 
@@ -29,6 +29,14 @@ class Individual
 
   def informations_(informations)
     @informations = informations
+  end
+
+  def calculate_centroid_value
+    @centroid_value = @informations.inject(:+) / @info_numbers.to_f
+  end
+
+  def calculate_fitness_value
+    @informations.inject(:+)
   end
 
   private
