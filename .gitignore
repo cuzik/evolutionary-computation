@@ -9,6 +9,7 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+/logs/
 
 # Used by dotenv library to load environment variables.
 # .env
@@ -48,3 +49,7 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+log_bests_individuals_fitness
+log_average_fitness
+log_diversity

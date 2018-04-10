@@ -1,6 +1,6 @@
 load 'population.rb'
 
-population_one = Population.new(10, :int, 10, -5, 10)
+population_one = Population.new(10, :int, 10, 0.8, -5, 10)
 
 puts '-'
 puts "População #{population_one.id}"
@@ -10,7 +10,7 @@ population_one.individuals.each do |individual|
   puts "#{individual.id} - #{individual.informations}"
 end
 
-population_two = Population.new(10, :int_perm, 10)
+population_two = Population.new(10, :int_perm, 10, 0.8)
 
 puts '-'
 puts "População #{population_two.id}"
@@ -20,7 +20,7 @@ population_two.individuals.each do |individual|
   puts "#{individual.id} - #{individual.informations}"
 end
 
-population_three = Population.new(10, :bin, 10)
+population_three = Population.new(10, :bin, 10, 0.8)
 
 puts '-'
 puts "População #{population_three.id}"
@@ -30,7 +30,7 @@ population_three.individuals.each do |individual|
   puts "#{individual.id} - #{individual.informations}"
 end
 
-population_four = Population.new(10, :uni, 10, -10, 10)
+population_four = Population.new(10, :uni, 10, 0.8, -10, 10)
 
 puts '-'
 puts "População #{population_four.id}"

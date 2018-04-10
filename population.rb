@@ -11,29 +11,110 @@ class Population
 
   @@last_id = 0
 
-  def initialize(number_of_individuals, type_data, info_numbers, lim_inf = 0, lim_sup = 1)
+  def initialize(number_of_individuals, type_data, info_numbers, mutation_taxa, number_of_geration, lim_inf = 0, lim_sup = 1)
     @@last_id += 1
-    @id                    = @@last_id
-    @number_of_individuals = number_of_individuals
-    @type_data             = type_data
-    @diversity             = []
-    @fitness               = []
+    @id                      = @@last_id
+    @number_of_individuals   = number_of_individuals
+    @type_data               = type_data
+    @info_numbers            = info_numbers
+    @mutation_taxa           = mutation_taxa
+    @number_of_geration      = number_of_geration
+    @diversity               = []
+    @fitness_list            = []
+    @bests_individuals       = []
+    @average_fitness         = []
+    @individulas_to_populate = []
+    @new_sequences           = []
     @individuals = Array.new(@number_of_individuals) do
       Individual.new(type_data, info_numbers, lim_inf, lim_sup)
     end
   end
 
-  def evoluate
-    @diversity += [calculate_diversity]
-    @fitness   += [calculate_fitness_of_population]
+  def run
+    @number_of_geration.times do
+      evoluate
+      p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
+    end
+    gen_logs
+    gen_graphics
   end
 
-  def gen_graphyc
-    p "Diversity: #{@diversity}"
-    p "Fitness:   #{@fitness}"
+  def gen_graphics
+    system("python gen_graphics.py")
+  end
+
+  def gen_logs
+    # escrevendo @diversity
+    system("mkdir -p logs")
+    File.open('logs/log_diversity', 'w') do |f|
+      @diversity.each do |line|
+        f.puts line
+      end
+    end
+
+    # escrevendo @bests_individuals
+    File.open('logs/log_bests_individuals_fitness', 'w') do |f|
+      @bests_individuals.map{|item| item.fitness_value}.each do |line|
+        f.puts line
+      end
+    end
+
+    # escrevendo @average_fitness
+    File.open('logs/log_average_fitness', 'w') do |f|
+      @average_fitness.each do |line|
+        f.puts line
+      end
+    end
   end
 
   private
+
+  def evoluate
+    @diversity += [calculate_diversity]
+    calculate_fitness_of_population
+    select_best_individual
+    change_new_individuals
+    crossover_uniforme
+    mutation_bit_flip
+    individuals[rand(0...@number_of_individuals)] = @best_individual
+  end
+
+  def mutation_bit_flip
+    index = 0
+    @new_sequences.each do |item|
+      new_sequence = item
+      for i in 0...@info_numbers
+        if rand(0.to_f..1.to_f) < @mutation_taxa
+          new_sequence[i] = (new_sequence[i] - 1).abs
+        end
+      end
+      individuals[index] = Individual.new(@type_data, @info_numbers, @lim_inf, @lim_sup, new_sequence)
+    end
+  end
+  
+  def crossover_uniforme
+    @new_sequences = []
+    for i in 0...@number_of_individuals
+      @new_sequences += [cruzate(i, (i+1) % @number_of_individuals)]
+    end
+  end
+
+  def cruzate(index_1, index_2)
+    new_sequence = []
+    for i in 0...@info_numbers
+      new_sequence += [rand(0.to_f..1.to_f) < 0.5 ? @individulas_to_populate[index_1].informations[i] : @individulas_to_populate[index_2].informations[i]]
+    end
+    new_sequence
+  end
+
+  def select_best_individual
+    @best_individual = individuals[0]
+    @individuals.each do |individual| 
+      @best_individual = individual if individual.fitness_value > @best_individual.fitness_value
+    end
+    @bests_individuals += [@best_individual]
+    @average_fitness += [@fitness_list.inject(:+) / @number_of_individuals]
+  end
 
   def calculate_diversity
     calculate_centroid_values
@@ -57,10 +138,38 @@ class Population
   end
 
   def calculate_fitness_of_population
-    fitness_list = []
     @individuals.each do |individual|
-      fitness_list += [individual.calculate_fitness_value]
+      individual.calculate_fitness_value
     end
-    fitness_list.max
+    @fitness_list = individuals.map { |item| item.fitness_value }
+  end
+
+  def change_new_individuals
+    create_roulette
+    @individulas_to_populate = []
+    for i in 1...@number_of_individuals
+      @individulas_to_populate += [@individuals[change_individual_index]]
+    end
+    @individulas_to_populate += [@best_individual]
+  end
+
+  def create_roulette
+    @roulette = []
+    total_fitness = @fitness_list.inject(:+)
+    total = 0
+    @fitness_list.each do |fitness|
+      total += (fitness / total_fitness)
+      @roulette += [total]
+    end
+  end
+
+  def change_individual_index
+    a = rand(0.to_f..1.to_f)
+    index = 0
+    @roulette.each do |item|
+      return index if item > a
+      index =+ 1
+    end
+    return index
   end
 end

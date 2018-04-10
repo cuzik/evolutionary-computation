@@ -8,13 +8,13 @@ require 'matrix'
 
 # Individual
 class Individual
-  attr_reader :id, :informations, :centroid_value
+  attr_reader :id, :informations, :centroid_value, :fitness_value
 
   @@last_id = 0
 
   TYPES_OPTIONS = %i[int int_perm bin uni].freeze
 
-  def initialize(type_data, info_numbers, lim_inf = nil, lim_sup = nil)
+  def initialize(type_data, info_numbers, lim_inf = nil, lim_sup = nil, informations = nil)
     @@last_id += 1
     @id           = @@last_id
     @info_numbers = info_numbers
@@ -24,7 +24,7 @@ class Individual
 
     validate_params
 
-    @informations = informations_init
+    @informations = informations.nil? ? informations_init : informations
   end
 
   def informations_(informations)
@@ -36,7 +36,16 @@ class Individual
   end
 
   def calculate_fitness_value
-    @informations.inject(:+)
+    last_index = informations[0]
+    @fitness_value = 0
+    for i in 1..@info_numbers
+      if informations[i] != last_index
+        @fitness_value +=1
+        last_index = informations[i]
+      end
+    end
+    @fitness_value = @fitness_value / Float(@info_numbers)
+    @fitness_value
   end
 
   private
