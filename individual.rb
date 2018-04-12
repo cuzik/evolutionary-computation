@@ -44,8 +44,12 @@ class Individual
         last_index = informations[i]
       end
     end
-    @fitness_value = @fitness_value / Float(@info_numbers)
+    @fitness_value = @fitness_value / @info_numbers.to_f
     @fitness_value
+  end
+
+  def informations=(new_informations)
+    @informations = new_informations
   end
 
   private

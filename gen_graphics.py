@@ -33,8 +33,8 @@ def graphic_gen_smooth(vetor, title, labels):
 		plt.plot(a, power_smooth)
 	plt.legend(labels)
 	plt.title(title)
-	plt.xlabel('Algorithm')
-	plt.ylabel('time (s)')
+	plt.xlabel('Generation')
+	plt.ylabel('Fitness')
 	plt.show()
 
 
@@ -44,8 +44,8 @@ def graphic_gen(vetor, title, labels):
 		plt.plot(i)
 	plt.legend(labels)
 	plt.title(title)
-	plt.xlabel('Algorithm')
-	plt.ylabel('time (s)')
+	plt.xlabel('Generation')
+	plt.ylabel('Fitness')
 	plt.show()
 
 
@@ -64,5 +64,5 @@ for file_name in file_names:
 
 
 
-graphic_gen(times,'AAAAAAA', labels)
-graphic_gen_smooth(times,'AAAAAAA', labels)
+# graphic_gen(times,'Grafico de Convergencia', labels)
+graphic_gen_smooth(times,'Grafico de Convergencia', labels)

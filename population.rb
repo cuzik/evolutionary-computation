@@ -11,13 +11,14 @@ class Population
 
   @@last_id = 0
 
-  def initialize(number_of_individuals, type_data, info_numbers, mutation_taxa, number_of_geration, lim_inf = 0, lim_sup = 1)
+  def initialize(number_of_individuals, type_data, info_numbers, crossover_taxa, mutation_taxa, number_of_geration, lim_inf = 0, lim_sup = 1)
     @@last_id += 1
     @id                      = @@last_id
     @number_of_individuals   = number_of_individuals
     @type_data               = type_data
     @info_numbers            = info_numbers
     @mutation_taxa           = mutation_taxa
+    @crossover_taxa           = crossover_taxa
     @number_of_geration      = number_of_geration
     @diversity               = []
     @fitness_list            = []
@@ -31,10 +32,25 @@ class Population
   end
 
   def run
-    @number_of_geration.times do
+    index = 0
+    if @number_of_geration == 0
       evoluate
-      p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
+      while(@best_individual.fitness_value != 1) do
+        evoluate
+        p index
+        index += 1
+        # p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
+      end
+    else
+      @number_of_geration.times do
+        p index
+        index += 1
+        evoluate
+        # p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
+      end
     end
+
+    p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
     gen_logs
     gen_graphics
   end
@@ -81,14 +97,15 @@ class Population
 
   def mutation_bit_flip
     index = 0
-    @new_sequences.each do |item|
-      new_sequence = item
+    @new_sequences.each do |new_sequence|
       for i in 0...@info_numbers
-        if rand(0.to_f..1.to_f) < @mutation_taxa
+        a = rand(0.to_f..1.to_f)
+        if a < @mutation_taxa
           new_sequence[i] = (new_sequence[i] - 1).abs
         end
       end
       individuals[index] = Individual.new(@type_data, @info_numbers, @lim_inf, @lim_sup, new_sequence)
+      index +=1
     end
   end
   
@@ -102,7 +119,7 @@ class Population
   def cruzate(index_1, index_2)
     new_sequence = []
     for i in 0...@info_numbers
-      new_sequence += [rand(0.to_f..1.to_f) < 0.5 ? @individulas_to_populate[index_1].informations[i] : @individulas_to_populate[index_2].informations[i]]
+      new_sequence += [rand(0.to_f..1.to_f) < @crossover_taxa ? @individulas_to_populate[index_1].informations[i] : @individulas_to_populate[index_2].informations[i]]
     end
     new_sequence
   end
@@ -113,7 +130,7 @@ class Population
       @best_individual = individual if individual.fitness_value > @best_individual.fitness_value
     end
     @bests_individuals += [@best_individual]
-    @average_fitness += [@fitness_list.inject(:+) / @number_of_individuals]
+    @average_fitness += [@fitness_list.inject(:+) / Float(@number_of_individuals)]
   end
 
   def calculate_diversity
