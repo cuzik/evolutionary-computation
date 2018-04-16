@@ -37,7 +37,7 @@ class Population
       evoluate
       while(@best_individual.fitness_value != 1) do
         evoluate
-        p index
+        p "#{index} - #{@best_individual.fitness_value}"
         index += 1
         # p "Best: #{@best_individual.informations} : #{@best_individual.fitness_value}"
       end

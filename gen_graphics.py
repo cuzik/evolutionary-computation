@@ -64,5 +64,5 @@ for file_name in file_names:
 
 
 
-# graphic_gen(times,'Grafico de Convergencia', labels)
-graphic_gen_smooth(times,'Grafico de Convergencia', labels)
+graphic_gen(times,'Grafico de Convergencia', labels)
+# graphic_gen_smooth(times,'Grafico de Convergencia', labels)
