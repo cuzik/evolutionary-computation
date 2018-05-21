@@ -108,7 +108,7 @@ class Population
       index +=1
     end
   end
-  
+
   def crossover_uniforme
     @new_sequences = []
     for i in 0...@number_of_individuals
@@ -126,7 +126,7 @@ class Population
 
   def select_best_individual
     @best_individual = individuals[0]
-    @individuals.each do |individual| 
+    @individuals.each do |individual|
       @best_individual = individual if individual.fitness_value > @best_individual.fitness_value
     end
     @bests_individuals += [@best_individual]
